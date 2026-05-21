@@ -4,6 +4,8 @@ package com.example.appcocktails.ui.screens.home
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.io.IOException
+import java.net.SocketTimeoutException
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -40,7 +42,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 // Dispara notificación al cargar exitosamente
                 NotificationHelper.showDataLoadedNotification(getApplication(), cocktails.size)
             } catch (e: Exception) {
-                _uiState.value = HomeUiState.Error(e.message ?: "Error desconocido")
+                val message = when (e) {
+                    is SocketTimeoutException -> "La solicitud tardó demasiado. Revisa tu conexión y vuelve a intentar."
+                    is IOException -> "No se pudo conectar a internet. Verifica tu conexión y vuelve a intentar."
+                    else -> e.message ?: "Error desconocido"
+                }
+                _uiState.value = HomeUiState.Error(message)
             }
         }
     }

@@ -51,9 +51,27 @@ fun HomeScreen(
                     }
                 }
                 is HomeUiState.Success -> {
-                    LazyColumn(contentPadding = PaddingValues(16.dp)) {
-                        items(state.cocktails) { cocktail ->
-                            CocktailItem(cocktail = cocktail, onClick = { onCocktailClick(cocktail.id) })
+                    if (state.cocktails.isEmpty()) {
+                        Column(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(horizontal = 24.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                "No se encontraron cócteles para mostrar.",
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Button(onClick = { viewModel.loadCocktails() }) {
+                                Text("Recargar")
+                            }
+                        }
+                    } else {
+                        LazyColumn(contentPadding = PaddingValues(16.dp)) {
+                            items(state.cocktails) { cocktail ->
+                                CocktailItem(cocktail = cocktail, onClick = { onCocktailClick(cocktail.id) })
+                            }
                         }
                     }
                 }

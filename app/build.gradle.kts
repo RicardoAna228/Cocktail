@@ -1,4 +1,3 @@
-import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
 
 plugins {
     alias(libs.plugins.android.application)
@@ -14,7 +13,6 @@ android {
     defaultConfig {
         applicationId = "com.example.appcocktails"
         minSdk = 24
-        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
